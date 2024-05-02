@@ -12,7 +12,7 @@ import { toast } from '../ui/use-toast';
 export function InfoCard() {
   const FormSchema = z.object({
     id: z.string().min(3, {
-      message: 'Id must be at least 3 characters.',
+      message: 'Id must be at least 6 characters.',
     }),
   });
 
