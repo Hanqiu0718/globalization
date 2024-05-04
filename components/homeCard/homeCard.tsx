@@ -5,10 +5,12 @@ import { Alert } from '../ui/alert';
 import { Button } from '../ui/button';
 import { Card, CardDescription } from '../ui/card';
 import { useRouter } from 'next/navigation'
+import { useUser } from '@/providers/context';
 
 export function HomeCard() {
     const router = useRouter();
-    const [response, setResponse] = useState<string | null>(null);
+    // const [response, setResponse] = useState<string | null>(null);
+    const { response, setResponse } = useUser();
     const handleYesClick = () => {
         setResponse('yes');
         router.push('/info');

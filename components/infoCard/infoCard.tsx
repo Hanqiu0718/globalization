@@ -9,9 +9,18 @@ import { z } from 'zod';
 import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/providers/context';
+import { useEffect } from 'react';
 
 export function InfoCard() {
   const router = useRouter();
+  const { response, setMturkId } = useUser();
+
+  useEffect(() => {
+    if (!response) {
+      router.push('/');
+    }
+  }, [response]);
 
   const FormSchema = z.object({
     id: z.string().min(3, {
@@ -79,6 +88,7 @@ export function InfoCard() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setMturkId(data.id)
     router.push('/chatbot');
   }
 
