@@ -9,7 +9,6 @@ import { useUser } from '@/providers/context';
 
 export function HomeCard() {
     const router = useRouter();
-    // const [response, setResponse] = useState<string | null>(null);
     const { response, setResponse } = useUser();
     const handleYesClick = () => {
         setResponse('yes');
