@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Message } from '@/global';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/context';
+import { host1, host2, host3, setMessagesInDB } from '@/server-actions';
 
 export function ChatbotCard() {
 
@@ -17,13 +18,23 @@ export function ChatbotCard() {
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState([{ type: 'host', content: "Welcome to chat, let's discuss globalization." }]);
     const { response, mturkId } = useUser();
+    const [selectedHostIndex, setSelectedHostIndex] = useState<number>(-1);
 
     useEffect(() => {
         if (!response || !mturkId) {
-          router.push('/');
+            router.push('/');
         }
-      }, [response, mturkId]);
+    }, [response, mturkId]);
 
+    useEffect(() => {
+        if (selectedHostIndex === -1) {
+            const randomIndex = Math.floor(Math.random() * hosts.length);
+            setSelectedHostIndex(randomIndex);
+        }
+    }, [selectedHostIndex]);
+
+    const hosts = [host1, host2, host3];
+    const host = hosts[selectedHostIndex];
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(e.target.value);
     };
@@ -32,12 +43,35 @@ export function ChatbotCard() {
         const userMessage: Message = {
             type: 'user',
             content: inputText,
+            userId: mturkId,
         };
         let updatedMessages = [...messages, userMessage];
 
         setLoading(true);
-        setMessages(updatedMessages);
-        setInputText('');
+        try {
+            const response: any = await host(inputText);
+            const hostMessage: Message = {
+                type: 'host',
+                content: response?.res ?? '',
+                userId: response.name,
+            };
+            console.log(response.name)
+            updatedMessages = [...updatedMessages, hostMessage];
+            await setMessagesInDB([userMessage, hostMessage]);
+            setMessages(updatedMessages);
+            setInputText('');
+        } catch (error) {
+            console.error('Error fetching data from OpenAI:', error);
+            const errorMessage: Message = {
+                type: 'host',
+                content:
+                    'An error occurred while fetching the response. Please try again.',
+                userId: mturkId,
+            };
+            setMessages([...messages, errorMessage]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
