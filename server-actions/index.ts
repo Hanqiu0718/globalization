@@ -8,7 +8,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_KEY,
 });
 
-export async function host1(inputText: any) {
+export async function host1(inputText: any, updatedMessages: any) {
     try {
         const prompt = `I want you to act as a host of conversation. I'll provide you with three sets of
       instructions, and please make sure to follow these three sets of instructions during the
@@ -103,7 +103,8 @@ export async function host1(inputText: any) {
       human-to-human conversation.
       ● Add non-verbal cues such as “??, veeeery” to make you appear more human
       ● Add shortenings/abbreviations such as LOL, IDK, PLS, OK, etc.
-      . "This is what the other person saying ${inputText}"`;
+      This is history of conversation you being host with user: ${updatedMessages}.
+      "This is now what user is saying: ${inputText}."`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
@@ -119,7 +120,7 @@ export async function host1(inputText: any) {
     }
 }
 
-export async function host2(inputText: any) {
+export async function host2(inputText: any, updatedMessages: any) {
     try {
         const prompt = `I want you to act as a host of conversation.  I'll provide you with three sets of
         instructions, and please make sure to follow these three sets of instructions during the
@@ -186,7 +187,9 @@ export async function host2(inputText: any) {
         increasing array of bilateral and multilateral, regional trade and investment
         agreements. (Gallagher, K. P., 2009)
         2. For each response you provide to participants, the length of the response must be 3 or less
-        than 3 sentences. "This is what the other person saying ${inputText}"`;
+        than 3 sentences.
+        This is history of conversation you being host with user: ${updatedMessages}.
+        "This is now what user is saying: ${inputText}."`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
@@ -202,7 +205,7 @@ export async function host2(inputText: any) {
     }
 }
 
-export async function host3(inputText: any) {
+export async function host3(inputText: any, updatedMessages: any) {
     try {
         const prompt = `I want you to act as a host of conversation. I'll provide you with three sets of
         instructions, and please make sure to follow these three sets of instructions during the
@@ -297,7 +300,9 @@ export async function host3(inputText: any) {
         ● Add emojis to your conversation with the participants to make it a more
         human-to-human conversation.
         ● Add non-verbal cues such as “??, veeeery” to make you appear more human
-        ● Add shortenings/abbreviations such as LOL, IDK, PLS, OK, etc. "This is what the other person saying ${inputText}"`;
+        ● Add shortenings/abbreviations such as LOL, IDK, PLS, OK, etc.
+        This is history of conversation you being host with user: ${updatedMessages}.
+        "This is now what user is saying: ${inputText}".`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',

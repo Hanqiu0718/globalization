@@ -46,16 +46,14 @@ export function ChatbotCard() {
             userId: mturkId,
         };
         let updatedMessages = [...messages, userMessage];
-
         setLoading(true);
         try {
-            const response: any = await host(inputText);
+            const response: any = await host(inputText, updatedMessages);
             const hostMessage: Message = {
                 type: 'host',
                 content: response?.res ?? '',
                 userId: response.name,
             };
-            console.log(response.name)
             updatedMessages = [...updatedMessages, hostMessage];
             await setMessagesInDB([userMessage, hostMessage]);
             setMessages(updatedMessages);
