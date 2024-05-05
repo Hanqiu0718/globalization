@@ -24,16 +24,16 @@ export function ChatbotCard() {
         if (!response || !mturkId) {
             router.push('/');
         }
-    }, [response, mturkId]);
+    }, [response, mturkId, router]);
 
+    const hosts = [host1, host2, host3];
     useEffect(() => {
         if (selectedHostIndex === -1) {
             const randomIndex = Math.floor(Math.random() * hosts.length);
             setSelectedHostIndex(randomIndex);
         }
-    }, [selectedHostIndex]);
+    }, [selectedHostIndex, hosts.length]);
 
-    const hosts = [host1, host2, host3];
     const host = hosts[selectedHostIndex];
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(e.target.value);
@@ -79,7 +79,7 @@ export function ChatbotCard() {
             <Card className="w-full md:w-[650px] mt-10 mb-10 mx-auto border-0 md:border">
                 <div className="flex items-center justify-between">
                     <CardTitle className="font-semibold mt-7 mb-7 text-[#212B36] md:mx-5">
-                        Let's talk about globalization
+                        Let&apos;s talk about globalization
                     </CardTitle>
                 </div>
                 <hr className="w-full mb-10" />

@@ -20,7 +20,7 @@ export function InfoCard() {
     if (!response) {
       router.push('/');
     }
-  }, [response]);
+  }, [response, router]);
 
   const FormSchema = z.object({
     id: z.string().min(3, {
