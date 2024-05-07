@@ -110,7 +110,6 @@ export function ChatbotCard() {
     }, []);
 
     useEffect(() => {
-        console.log(min, sec)
         if ((min === 11 && sec === 30) || (min === 8 && sec === 30) || (min === 5 && sec === 30) || (min === 0 && sec === 30)) {
             setTimeLeft30(true);
             setTimeout(() => {
