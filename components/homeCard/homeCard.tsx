@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Alert } from '../ui/alert';
 import { Button } from '../ui/button';
 import { Card, CardDescription } from '../ui/card';
@@ -10,6 +9,7 @@ import { useUser } from '@/providers/context';
 export function HomeCard() {
     const router = useRouter();
     const { response, setResponse } = useUser();
+
     const handleYesClick = () => {
         setResponse('yes');
         router.push('/info');
@@ -149,3 +149,7 @@ export function HomeCard() {
         </Card>
     );
 }
+function setHostFunction(arg0: (inputText: any, updatedMessages: any) => Promise<{ res: string | null; name: string; } | undefined>) {
+    throw new Error('Function not implemented.');
+}
+

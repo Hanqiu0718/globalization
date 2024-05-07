@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/context';
@@ -24,46 +24,46 @@ export function InfoCard() {
 
   const FormSchema = z.object({
     id: z.string().min(3, {
-      message: 'Please enter your Mturk ID.',
+      message: 'Please enter your Mturk ID',
     }),
     select1: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select2: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select3: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select4: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select5: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select6: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select7: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select8: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select9: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select10: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select11: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select12: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
     select13: z.string().min(3, {
-      message: 'Please select an option.',
+      message: 'Please select an option',
     }),
   });
 
@@ -129,7 +129,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -155,7 +155,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -181,7 +181,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -207,7 +207,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -233,7 +233,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -259,7 +259,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -285,7 +285,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -311,7 +311,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -337,7 +337,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -363,7 +363,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -389,7 +389,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Selecct an option." />
+                        <SelectValue placeholder="Selecct an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -415,7 +415,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -441,7 +441,7 @@ export function InfoCard() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-[600px] mt-5">
-                        <SelectValue placeholder="Select an option." />
+                        <SelectValue placeholder="Select an option" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
