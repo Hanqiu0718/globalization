@@ -11,7 +11,6 @@ import { Message } from '@/global';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/context';
 import { host1, host2, host3, setMessagesInDB } from '@/server-actions';
-import { MyTimer } from './timer';
 
 export function ChatbotCard() {
 
@@ -26,16 +25,13 @@ export function ChatbotCard() {
     const [timeLeft30, setTimeLeft30] = useState(false);
     const [timeUp, setTimeUp] = useState(false);
     const [openDiscussion, setOpenDiscussion] = useState(false);
-    const { sec, min } = useUser();
-    const time = new Date();
-    time.setSeconds(time.getSeconds() + 840);
+    const [resetCount, setResetCount] = useState<number>(0);
 
     useEffect(() => {
         if (!response || !mturkId) {
             router.push('/');
         }
     }, [response, mturkId, router]);
-
 
     const hosts = [host1, host2, host3];
     const randomIndex = Math.floor(Math.random() * 3);
@@ -52,23 +48,17 @@ export function ChatbotCard() {
             setTypingStartTime(Date.now());
         }
     };
-
     const handleChatSubmit = async () => {
-        const submissionTime = Date.now();
-        if (typingStartTime) {
-            const timeDifference = submissionTime - typingStartTime;
-            setTypingTime(typingTime + timeDifference);
-            setTypingStartTime(null);
-        }
         const userMessage: Message = {
             type: 'user',
             content: inputText,
             userId: mturkId,
         };
         let updatedMessages = [...messages, userMessage];
+        setInputText('');
+        setInputDisabled(true)
         setMessages(updatedMessages);
         setLoading(true);
-        setInputDisabled(true)
         try {
             const response: any = await host(inputText, updatedMessages);
             const hostMessage: Message = {
@@ -79,11 +69,10 @@ export function ChatbotCard() {
             updatedMessages = [...updatedMessages, hostMessage];
             await setMessagesInDB([userMessage, hostMessage]);
             setTimeout(async () => {
-                setInputText('');
                 setMessages(updatedMessages);
                 setLoading(false);
                 setInputDisabled(false);
-            }, 30000);
+            }, 20000);
         } catch (error) {
             console.error('Error fetching data from OpenAI:', error);
             const errorMessage: Message = {
@@ -97,44 +86,53 @@ export function ChatbotCard() {
             setInputDisabled(false);
         }
     };
-
+    const handleKeyUp = () => {
+        if (typingStartTime) {
+            const timeDifference = Date.now() - typingStartTime;
+            setTypingTime((prevTypingTime) => prevTypingTime + timeDifference / 1000);
+            setTypingStartTime(null);
+        }
+    };
     useEffect(() => {
         return () => {
             if (typingStartTime) {
-                const submissionTime = Date.now();
-                const timeDifference = submissionTime - typingStartTime;
-                setTypingTime(typingTime + timeDifference);
+                setTypingTime((prevTypingTime) => prevTypingTime + (Date.now() - typingStartTime) / 1000);
                 setTypingStartTime(null);
             }
         };
-    }, []);
+    }, [inputText]);
 
     useEffect(() => {
-        if ((min === 11 && sec === 30) || (min === 8 && sec === 30) || (min === 5 && sec === 30) || (min === 0 && sec === 30)) {
+        if (resetCount < 3 && typingTime >= 90) {
             setTimeLeft30(true);
             setTimeout(() => {
                 setTimeLeft30(false);
             }, 5000);
         }
 
-        if ((min === 5 && sec === 0)) {
+        if (resetCount === 3) {
             setOpenDiscussion(true);
         }
 
-        if ((min === 0 && sec === 30)) {
-            const lastMessage: Message = {
+        if (resetCount === 3 && typingTime >= 270) {
+            setTimeLeft30(true);
+            setTimeout(() => {
+                setTimeLeft30(false);
+            }, 5000);
+        }
+
+        console.log(resetCount)
+        if (resetCount === 3 && typingTime >= 300) {
+            setInputDisabled(true);
+            const nextSectionMessage: Message = {
                 type: 'host',
                 content: "Oh, it's nice discussing globalization with you today. Good Bye!",
                 userId: 'Host',
             };
-            setMessages(prevMessages => [...prevMessages, lastMessage]);
-        }
-        if ((min === 0 && sec === 0)) {
-            setInputDisabled(true);
-            setOpenDiscussion(false);
+            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
         }
 
-        if ((min === 11 && sec === 0) || (min === 8 && sec === 0)) {
+        if (resetCount < 3 && typingTime >= 120) {
             setTimeUp(true);
             const nextSectionMessage: Message = {
                 type: 'host',
@@ -142,11 +140,14 @@ export function ChatbotCard() {
                 userId: 'Host',
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            setTypingTime(0);
+            setResetCount(prevCounter => prevCounter + 1);
             setTimeout(() => {
                 setTimeUp(false);
             }, 5000);
         }
-    }, [min, sec]);
+    }, [resetCount, typingTime]);
+
     return (
         <Card className="w-full border-0 md:border md:border-[2px] flex-col items-center justify-center mb-10">
             <Card className="w-full md:w-[650px] mt-10 mb-10 mx-auto border-0 md:border">
@@ -154,10 +155,9 @@ export function ChatbotCard() {
                     <CardTitle className="font-semibold mt-5 mb-5 text-[#212B36] md:mx-5">
                         Let&apos;s talk about globalization
                     </CardTitle>
-                    <MyTimer expiryTimestamp={time} />
                 </div>
                 <CardDescription className="font-semibold text-xl text-[#212B36] md:mx-5 mb-5">
-                    Participant Time: {Math.floor(typingTime / 1000)} seconds
+                    Participant Time: {Math.floor(typingTime / 60)} minutes {Math.floor((typingTime % 60))} seconds
                 </CardDescription>
                 {openDiscussion && <CardDescription className="text-base text-[#212B36] md:mx-5 mb-5">
                     Open Discussion Time
@@ -219,7 +219,7 @@ export function ChatbotCard() {
                                 {message.type === 'host' && (
                                     <div>
                                         <p style={{ fontSize: '12px', color: '#637381' }}>
-                                            Host
+                                            Discussion Partner
                                         </p>
                                         <div
                                             style={{
@@ -268,6 +268,7 @@ export function ChatbotCard() {
                         required={true}
                         value={inputText}
                         onChange={handleInputChange}
+                        onKeyUp={handleKeyUp}
                         disabled={inputDisabled}
                     />
                     <Button
