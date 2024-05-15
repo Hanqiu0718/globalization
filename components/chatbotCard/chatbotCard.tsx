@@ -39,7 +39,7 @@ export function ChatbotCard() {
         if (!response || !mturkId) {
             router.push('/');
         } else {
-            handleChatSubmit();
+        handleChatSubmit();
         }
     }, [response, mturkId, router]);
 
@@ -50,26 +50,41 @@ export function ChatbotCard() {
         }
     };
 
-    const handleChatSubmit = async () => {
-        const userMessage: Message = {
-            type: 'user',
-            content: inputText,
-            userId: mturkId,
-        };
-        let updatedMessages = [...messages, userMessage];
+    const handleChatSubmit = async (alert?: any) => {
+        const text = alert ? alert : inputText;
+        let updatedMessages = [...messages];
+        let messageToSend!: Message;
+        if (text === alert) {
+            const robotMessage: Message = {
+                type: 'robot',
+                content: text,
+            };
+            updatedMessages = [...updatedMessages, robotMessage];
+            messageToSend = robotMessage;
+            setMessages(updatedMessages);
+        }
+        if (text === inputText) {
+            const userMessage: Message = {
+                type: 'user',
+                content: text,
+                userId: mturkId,
+            };
+            updatedMessages = [...updatedMessages, userMessage];
+            messageToSend = userMessage;
+            setMessages(updatedMessages);
+        }
         setInputText('');
         setInputDisabled(true)
-        setMessages(updatedMessages);
         setLoading(true);
         try {
-            const response: any = await host(inputText, updatedMessages);
+            const response: any = await host(text, updatedMessages);
             const hostMessage: Message = {
                 type: 'host',
                 content: response?.res ?? '',
                 userId: response.name,
             };
             updatedMessages = [...updatedMessages, hostMessage];
-            await setMessagesInDB([userMessage, hostMessage]);
+            await setMessagesInDB([messageToSend, hostMessage]);
             setTimeout(async () => {
                 setMessages(updatedMessages);
                 setLoading(false);
@@ -107,10 +122,10 @@ export function ChatbotCard() {
     }, [inputText]);
 
     useEffect(() => {
-        if (resetCount === 3) {
+        if (resetCount === 2) {
             setOpenDiscussion(true);
         }
-        if (resetCount === 3 && typingTime >= 300) {
+        if (resetCount === 2 && typingTime >= 300) {
             setInputDisabled(true);
             const nextSectionMessage: Message = {
                 type: 'robot',
@@ -119,32 +134,23 @@ export function ChatbotCard() {
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
         }
 
-        if (resetCount === 2 && typingTime >= 120) {
-            const nextSectionMessage: Message = {
-                type: 'robot',
-                content: "Time is up! Please move on to discuss political globalization",
-            };
-            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+        if (resetCount === 0 && typingTime >= 120) {
+            const content = "Time is up! Please move on to discuss political globalization.";
+            handleChatSubmit(content)
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
         if (resetCount === 1 && typingTime >= 120) {
-            const nextSectionMessage: Message = {
-                type: 'robot',
-                content: "Time is up! Please move on to discuss social globalization",
-            };
-            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            const content = "Time is up! Please move on to discuss social globalization.";
+            handleChatSubmit(content)
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
-        if (resetCount === 3 && typingTime >= 120) {
-            const nextSectionMessage: Message = {
-                type: 'robot',
-                content: `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window.`
-            };
-            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+        if (resetCount === 2 && typingTime >= 120) {
+            const content = `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window.`;
+            handleChatSubmit(content)
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
@@ -295,7 +301,7 @@ export function ChatbotCard() {
                         style={{ backgroundColor: 'green' }}
                         className="md:mx-5"
                         type="submit"
-                        onClick={handleChatSubmit}
+                        onClick={() => handleChatSubmit()}
                         disabled={inputDisabled}
                     >
                         <Image
