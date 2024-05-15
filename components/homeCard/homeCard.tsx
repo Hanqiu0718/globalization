@@ -12,7 +12,7 @@ export function HomeCard() {
 
     const handleYesClick = () => {
         setResponse('yes');
-        router.push('/info');
+        router.push('/details');
     };
     const handleNoClick = () => {
         setResponse('no');

@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import vector from '../../public/vector.svg';
 import Image from 'next/image';
 import PulseLoader from "react-spinners/PulseLoader";
@@ -17,30 +17,31 @@ export function ChatbotCard() {
     const router = useRouter();
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([]);
-    const { response, mturkId } = useUser();
+    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hey! Great that you're pairing each other to discuss globalization! I'm served as a timer robot to remind you when time is up and for you to move on. You will be discussing three perspectives of globalization - economics, social, and political. You'll spend about 5 minutes discussing each, and then there'll be an opportunity for open discussion. Please only discuss the specific topic for each session, and leave the left-over discussion in the open discussion if you want. Now, please go ahead and start to discuss economics globalization!` }]);
+    const { response, mturkId, index } = useUser();
     const [inputDisabled, setInputDisabled] = useState(false);
     const [typingStartTime, setTypingStartTime] = useState<number | null>(null);
     const [typingTime, setTypingTime] = useState<number>(0);
-    const [timeLeft30, setTimeLeft30] = useState(false);
-    const [timeUp, setTimeUp] = useState(false);
     const [openDiscussion, setOpenDiscussion] = useState(false);
     const [resetCount, setResetCount] = useState<number>(0);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+    const hosts = [host1, host2, host3];
+    const host = hosts[index];
+
+    useEffect(() => {
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     useEffect(() => {
         if (!response || !mturkId) {
             router.push('/');
+        } else {
+            handleChatSubmit();
         }
     }, [response, mturkId, router]);
-
-    const hosts = [host1, host2, host3];
-    const randomIndex = Math.floor(Math.random() * 3);
-
-    const host = hosts[randomIndex];
-
-    useEffect(() => {
-        handleChatSubmit();
-    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(e.target.value);
@@ -48,6 +49,7 @@ export function ChatbotCard() {
             setTypingStartTime(Date.now());
         }
     };
+
     const handleChatSubmit = async () => {
         const userMessage: Message = {
             type: 'user',
@@ -86,6 +88,7 @@ export function ChatbotCard() {
             setInputDisabled(false);
         }
     };
+
     const handleKeyUp = () => {
         if (typingStartTime) {
             const timeDifference = Date.now() - typingStartTime;
@@ -93,6 +96,7 @@ export function ChatbotCard() {
             setTypingStartTime(null);
         }
     };
+
     useEffect(() => {
         return () => {
             if (typingStartTime) {
@@ -103,84 +107,66 @@ export function ChatbotCard() {
     }, [inputText]);
 
     useEffect(() => {
-        if (resetCount < 3 && typingTime >= 90) {
-            setTimeLeft30(true);
-            setTimeout(() => {
-                setTimeLeft30(false);
-            }, 5000);
-        }
-
         if (resetCount === 3) {
             setOpenDiscussion(true);
         }
-
-        if (resetCount === 3 && typingTime >= 270) {
-            setTimeLeft30(true);
-            setTimeout(() => {
-                setTimeLeft30(false);
-            }, 5000);
-        }
-
-        console.log(resetCount)
         if (resetCount === 3 && typingTime >= 300) {
             setInputDisabled(true);
             const nextSectionMessage: Message = {
-                type: 'host',
+                type: 'robot',
                 content: "Oh, it's nice discussing globalization with you today. Good Bye!",
-                userId: 'Host',
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
         }
 
-        if (resetCount < 3 && typingTime >= 120) {
-            setTimeUp(true);
+        if (resetCount === 2 && typingTime >= 120) {
             const nextSectionMessage: Message = {
-                type: 'host',
-                content: "Let's move on to the next section.",
-                userId: 'Host',
+                type: 'robot',
+                content: "Time is up! Please move on to discuss political globalization",
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
-            setTimeout(() => {
-                setTimeUp(false);
-            }, 5000);
+        }
+
+        if (resetCount === 1 && typingTime >= 120) {
+            const nextSectionMessage: Message = {
+                type: 'robot',
+                content: "Time is up! Please move on to discuss social globalization",
+            };
+            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            setTypingTime(0);
+            setResetCount(prevCounter => prevCounter + 1);
+        }
+
+        if (resetCount === 3 && typingTime >= 120) {
+            const nextSectionMessage: Message = {
+                type: 'robot',
+                content: `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window.`
+            };
+            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            setTypingTime(0);
+            setResetCount(prevCounter => prevCounter + 1);
         }
     }, [resetCount, typingTime]);
+
+    const nextButtonHandler = () => {
+        router.push('/exit');
+    }
 
     return (
         <Card className="w-full border-0 md:border md:border-[2px] flex-col items-center justify-center mb-10">
             <Card className="w-full md:w-[650px] mt-10 mb-10 mx-auto border-0 md:border">
-                <div className="flex items-center justify-between">
-                    <CardTitle className="font-semibold mt-5 mb-5 text-[#212B36] md:mx-5">
-                        Let&apos;s talk about globalization
-                    </CardTitle>
-                </div>
-                <CardDescription className="font-semibold text-xl text-[#212B36] md:mx-5 mb-5">
-                    Participant Time: {Math.floor(typingTime / 60)} minutes {Math.floor((typingTime % 60))} seconds
-                </CardDescription>
-                {openDiscussion && <CardDescription className="text-base text-[#212B36] md:mx-5 mb-5">
-                    Open Discussion Time
-                </CardDescription>
-                }
-                {timeLeft30 && <CardDescription className="text-base text-[#FF0000] md:mx-5 mb-5">
-                    30 seconds left for this section
-                </CardDescription>
-                }
-                {timeUp && <CardDescription className="text-base text-[#FF0000] md:mx-5 mb-5">
-                    Time is up for this section
-                </CardDescription>
-                }
-                <hr className="w-full mb-10" />
                 <Card
                     style={{
                         border: 'solid white',
                         overflowY: 'auto',
                     }}
-                    className="w-full md:w-[620px] h-[442px] mx-auto mb-5"
+                    ref={messagesContainerRef}
+                    className="w-full md:w-[620px] h-[442px] mx-auto mb-5 mt-5"
                 >
                     <div className="flex flex-col space-y-5">
-                        {messages?.slice(1).map((message, index) => (
+                        {[...messages.slice(0, 1), ...messages.slice(2)].map((message, index) => (
                             <div
                                 key={index}
                                 className={message.type === 'user' ? 'text-right' : 'text-left'}
@@ -208,6 +194,40 @@ export function ChatbotCard() {
                                             </p>
                                         </div>
                                         <p style={{ fontSize: '10px', color: '#637381' }}>
+                                            {new Date().toLocaleTimeString('en-US', {
+                                                hour: 'numeric',
+                                                minute: 'numeric',
+                                                hour12: true,
+                                            })}
+                                        </p>
+                                    </div>
+                                )}
+                                {message.type === 'robot' && (
+                                    <div>
+                                        <p style={{ fontSize: '12px', color: '#637381' }}>
+                                            Timer Robot
+                                        </p>
+                                        <div
+                                            style={{
+                                                top: '629px',
+                                                left: '596.56px',
+                                                padding: '12px 20px',
+                                                borderRadius: '0px 16px 16px 16px',
+                                                gap: '10px',
+                                                backgroundColor: '#FF0000',
+                                            }}
+                                            className="w-full md:w-[351px]"
+                                        >
+                                            <p style={{ fontSize: '14px', color: '#FFFFFF' }}>
+                                                {message.content}
+                                            </p>
+                                        </div>
+                                        <p
+                                            style={{
+                                                fontSize: '10px',
+                                                color: '#637381',
+                                            }}
+                                        >
                                             {new Date().toLocaleTimeString('en-US', {
                                                 hour: 'numeric',
                                                 minute: 'numeric',
@@ -288,6 +308,13 @@ export function ChatbotCard() {
                     </Button>
                 </form>
             </Card>
+            {openDiscussion && (
+                <div className="flex justify-end mt-5 mx-5 mb-5">
+                    <Button className="ml-auto" variant="outline" onClick={nextButtonHandler}>
+                        Next
+                    </Button>
+                </div>
+            )}
         </Card>
     );
 }

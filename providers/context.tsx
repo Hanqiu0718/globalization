@@ -3,42 +3,32 @@
 import { createContext, useContext, useState } from 'react';
 
 type UserContextType = {
-    response: string | null;
-    mturkId: string;
-    setResponse: (value: string | null) => void;
-    setMturkId: (value: string) => void;
-    sec: number;
-    min: number;
-    setSec:  (value: number) => void;
-    setMin: (value: number) => void;
-    setHostFunction: (hostFunc: Function) => void;
-    hostFunction: Function;
+  response: string | null;
+  mturkId: string;
+  index: number;
+  setResponse: (value: string) => void;
+  setMturkId: (value: string) => void;
+  setIndex: (value: number) => void;
 };
-  
-  const userContextDefaultValues: UserContextType = {
-    response: null,
-    mturkId: '',
-    setResponse: () => {},
-    setMturkId: () => {},
-    sec: 0,
-    min: 0,
-    setSec:  () => {},
-    setMin: () => {},
-    setHostFunction: () => {},
-    hostFunction: () => {},
+
+const userContextDefaultValues: UserContextType = {
+  response: null,
+  mturkId: '',
+  index: 0,
+  setResponse: () => { },
+  setMturkId: () => { },
+  setIndex: () => { },
 };
 
 const UserContext = createContext<UserContextType>(userContextDefaultValues);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-    const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<string | null>(null);
   const [mturkId, setMturkId] = useState('');
-  const [min, setMin] = useState(0);
-  const [sec, setSec] = useState(0);
-  const [hostFunction, setHostFunction] = useState<Function>(userContextDefaultValues.hostFunction);
+  const [index, setIndex] = useState<number>(0);
 
   return (
-    <UserContext.Provider value={{ response, setResponse, mturkId, setMturkId, min, setMin, sec, setSec, hostFunction, setHostFunction }}>
+    <UserContext.Provider value={{ response, setResponse, mturkId, setMturkId, index, setIndex }}>
       {children}
     </UserContext.Provider>
   );

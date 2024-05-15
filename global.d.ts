@@ -1,6 +1,6 @@
 export interface Message {
-    type: 'user' | 'host';
+    type: 'user' | 'host' | 'robot';
     content: string;
-    userId: string;
+    userId?: string;
   }
   
