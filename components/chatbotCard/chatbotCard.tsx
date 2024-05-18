@@ -10,23 +10,26 @@ import { Input } from '@/components/ui/input';
 import { Message } from '@/global';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/context';
-import { host1, host2, host3, setMessagesInDB } from '@/server-actions';
+import { host1, host2, host3, host4, setMessagesInDB } from '@/server-actions';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 export function ChatbotCard() {
-
     const router = useRouter();
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hey! Great that you're pairing each other to discuss globalization! I'm served as a timer robot to remind you when time is up and for you to move on. You will be discussing three perspectives of globalization - economics, social, and political. You'll spend about 5 minutes discussing each, and then there'll be an opportunity for open discussion. Please only discuss the specific topic for each session, and leave the left-over discussion in the open discussion if you want. Now, please go ahead and start to discuss economics globalization!` }]);
+    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hey! Great that you're pairing each other to discuss globalization! I'm served as a timer robot to remind you when time is up and for you to move on. You will be discussing three perspectives of globalization - economics, social, and political. You'll spend about 5 minutes discussing each, and then there'll be an opportunity for open discussion. Please only discuss the specific topic for each session, and leave the left-over discussion in the open discussion if you want. Now, please go ahead and start to discuss economics globalization!`, timestamp: Date.now() }]);
     const { response, mturkId, index } = useUser();
     const [inputDisabled, setInputDisabled] = useState(false);
     const [typingStartTime, setTypingStartTime] = useState<number | null>(null);
     const [typingTime, setTypingTime] = useState<number>(0);
     const [openDiscussion, setOpenDiscussion] = useState(false);
     const [resetCount, setResetCount] = useState<number>(0);
+    const [showReminder, setShowReminder] = useState<boolean>(false);
+    const [countdown, setCountdown] = useState<number>(30);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-    const hosts = [host1, host2, host3];
+    const hosts = [host1, host2, host3, host4];
     const host = hosts[index];
 
     useEffect(() => {
@@ -39,7 +42,7 @@ export function ChatbotCard() {
         if (!response || !mturkId) {
             router.push('/');
         } else {
-        handleChatSubmit();
+            handleChatSubmit();
         }
     }, [response, mturkId, router]);
 
@@ -54,10 +57,14 @@ export function ChatbotCard() {
         const text = alert ? alert : inputText;
         let updatedMessages = [...messages];
         let messageToSend!: Message;
+
+        const currentTime = Date.now(); // Get the current timestamp
+
         if (text === alert) {
             const robotMessage: Message = {
                 type: 'robot',
                 content: text,
+                timestamp: currentTime, // Add timestamp
             };
             updatedMessages = [...updatedMessages, robotMessage];
             messageToSend = robotMessage;
@@ -68,13 +75,14 @@ export function ChatbotCard() {
                 type: 'user',
                 content: text,
                 userId: mturkId,
+                timestamp: currentTime, // Add timestamp
             };
             updatedMessages = [...updatedMessages, userMessage];
             messageToSend = userMessage;
             setMessages(updatedMessages);
         }
         setInputText('');
-        setInputDisabled(true)
+        setInputDisabled(true);
         setLoading(true);
         try {
             const response: any = await host(text, updatedMessages);
@@ -82,6 +90,7 @@ export function ChatbotCard() {
                 type: 'host',
                 content: response?.res ?? '',
                 userId: response.name,
+                timestamp: Date.now(), // Add timestamp
             };
             updatedMessages = [...updatedMessages, hostMessage];
             await setMessagesInDB([messageToSend, hostMessage]);
@@ -94,9 +103,9 @@ export function ChatbotCard() {
             console.error('Error fetching data from OpenAI:', error);
             const errorMessage: Message = {
                 type: 'host',
-                content:
-                    'An error occurred while fetching the response. Please try again.',
+                content: 'An error occurred while fetching the response. Please try again.',
                 userId: mturkId,
+                timestamp: Date.now(), // Add timestamp
             };
             setMessages([...messages, errorMessage]);
             setLoading(false);
@@ -121,6 +130,20 @@ export function ChatbotCard() {
         };
     }, [inputText]);
 
+    const startCountdown = () => {
+        let timeLeft = 30;
+        setShowReminder(true);
+        setCountdown(timeLeft);
+        const countdownInterval = setInterval(() => {
+            timeLeft -= 1;
+            setCountdown(timeLeft);
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                setShowReminder(false);
+            }
+        }, 1000);
+    };
+
     useEffect(() => {
         if (resetCount === 2) {
             setOpenDiscussion(true);
@@ -130,35 +153,49 @@ export function ChatbotCard() {
             const nextSectionMessage: Message = {
                 type: 'robot',
                 content: "Oh, it's nice discussing globalization with you today. Good Bye!",
+                timestamp: Date.now(), // Add timestamp
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
         }
 
-        if (resetCount === 0 && typingTime >= 120) {
-            const content = "Time is up! Please move on to discuss political globalization.";
-            handleChatSubmit(content)
-            setTypingTime(0);
-            setResetCount(prevCounter => prevCounter + 1);
-        }
-
-        if (resetCount === 1 && typingTime >= 120) {
+        if (resetCount === 0 && typingTime >= 180) {
             const content = "Time is up! Please move on to discuss social globalization.";
-            handleChatSubmit(content)
+            handleChatSubmit(content);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
-        if (resetCount === 2 && typingTime >= 120) {
-            const content = `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window.`;
-            handleChatSubmit(content)
+        if (resetCount === 1 && typingTime >= 180) {
+            const content = "Time is up! Please move on to discuss political globalization.";
+            handleChatSubmit(content);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
+        }
+
+        if (resetCount === 2 && typingTime >= 180) {
+            const content = `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window.`;
+            handleChatSubmit(content);
+            setTypingTime(0);
+            setResetCount(prevCounter => prevCounter + 1);
+        }
+
+        if ((resetCount === 0 || resetCount === 1 || resetCount === 2) && typingTime >= 150 && !showReminder) {
+            startCountdown();
         }
     }, [resetCount, typingTime]);
 
     const nextButtonHandler = () => {
         router.push('/exit');
     }
+
+    const handleEmojiClick = (emojiData: EmojiClickData) => {
+        setInputText(prevInputText => prevInputText + emojiData.emoji);
+        setShowEmojiPicker(false);
+    };
+
+    const toggleEmojiPicker = () => {
+        setShowEmojiPicker(prevState => !prevState);
+    };
 
     return (
         <Card className="w-full border-0 md:border md:border-[2px] flex-col items-center justify-center mb-10">
@@ -185,7 +222,7 @@ export function ChatbotCard() {
                                                 padding: '12px 20px',
                                                 borderRadius: '16px 16px 0px 16px',
                                                 gap: '10px',
-                                                backgroundColor: '#3056D3',
+                                                backgroundColor: '#00A08799',
                                                 marginLeft: 'auto',
                                                 maxWidth: '100%',
                                             }}
@@ -193,14 +230,14 @@ export function ChatbotCard() {
                                             <p
                                                 style={{
                                                     fontSize: '14px',
-                                                    color: '#FFFFFF',
+                                                    color: '#ffffff',
                                                 }}
                                             >
                                                 {message.content}
                                             </p>
                                         </div>
                                         <p style={{ fontSize: '10px', color: '#637381' }}>
-                                            {new Date().toLocaleTimeString('en-US', {
+                                            {new Date(message.timestamp).toLocaleTimeString('en-US', {
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                                 hour12: true,
@@ -220,11 +257,11 @@ export function ChatbotCard() {
                                                 padding: '12px 20px',
                                                 borderRadius: '0px 16px 16px 16px',
                                                 gap: '10px',
-                                                backgroundColor: '#FF0000',
+                                                backgroundColor: '#DC000099',
                                             }}
                                             className="w-full md:w-[351px]"
                                         >
-                                            <p style={{ fontSize: '14px', color: '#FFFFFF' }}>
+                                            <p style={{ fontSize: '14px', color: '#ffffff' }}>
                                                 {message.content}
                                             </p>
                                         </div>
@@ -234,7 +271,7 @@ export function ChatbotCard() {
                                                 color: '#637381',
                                             }}
                                         >
-                                            {new Date().toLocaleTimeString('en-US', {
+                                            {new Date(message.timestamp).toLocaleTimeString('en-US', {
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                                 hour12: true,
@@ -254,11 +291,11 @@ export function ChatbotCard() {
                                                 padding: '12px 20px',
                                                 borderRadius: '0px 16px 16px 16px',
                                                 gap: '10px',
-                                                backgroundColor: '#F4F7FF',
+                                                backgroundColor: '#3C548899',
                                             }}
                                             className="w-full md:w-[351px]"
                                         >
-                                            <p style={{ fontSize: '14px', color: '#637381' }}>
+                                            <p style={{ fontSize: '14px', color: '#ffffff' }}>
                                                 {message.content}
                                             </p>
                                         </div>
@@ -268,7 +305,7 @@ export function ChatbotCard() {
                                                 color: '#637381',
                                             }}
                                         >
-                                            {new Date().toLocaleTimeString('en-US', {
+                                            {new Date(message.timestamp).toLocaleTimeString('en-US', {
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                                 hour12: true,
@@ -281,6 +318,12 @@ export function ChatbotCard() {
                         {loading && <PulseLoader size={5} />}
                     </div>
                 </Card>
+
+                {showReminder && (
+                    <div className="text-center mb-3 mt-3 w-full">
+                        <p className="text-black text-sm">You still have {countdown} seconds left for this section of globalization discussion.</p>
+                    </div>
+                )}
 
                 <hr className="w-full mt-10" />
                 <form
@@ -312,7 +355,20 @@ export function ChatbotCard() {
                             height={20}
                         />
                     </Button>
+                    <Button
+                        style={{ backgroundColor: 'gray' }}
+                        className="md:mx-5"
+                        type="button"
+                        onClick={toggleEmojiPicker}
+                    >
+                        😊
+                    </Button>
                 </form>
+                {showEmojiPicker && (
+                    <div className="emoji-picker">
+                        <EmojiPicker onEmojiClick={handleEmojiClick} />
+                    </div>
+                )}
             </Card>
             {openDiscussion && (
                 <div className="flex justify-end mt-5 mx-5 mb-5">

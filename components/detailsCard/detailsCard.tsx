@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 export function DetailsCard() {
   const router = useRouter();
   const { response, setMturkId, setIndex } = useUser();
-  const randomIndex = Math.floor(Math.random() * 3);
+  const randomIndex = Math.floor(Math.random() * 4);
 
   useEffect(() => {
     if (!response) {
