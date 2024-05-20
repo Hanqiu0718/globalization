@@ -6,8 +6,8 @@ import { UserProvider } from "@/providers/context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "IG Chatbot",
-  description: "Chatbot about the globalization",
+  title: "Globalization",
+  description: "Discussion about the globalization",
 };
 
 export default function RootLayout({
