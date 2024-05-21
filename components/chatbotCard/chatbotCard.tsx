@@ -56,13 +56,13 @@ export function ChatbotCard() {
         let updatedMessages = [...messages];
         let messageToSend!: Message;
 
-        const currentTime = Date.now(); // Get the current timestamp
+        const currentTime = Date.now();
 
         if (text === alert) {
             const robotMessage: Message = {
                 type: 'robot',
                 content: text,
-                timestamp: currentTime, // Add timestamp
+                timestamp: currentTime,
             };
             updatedMessages = [...updatedMessages, robotMessage];
             messageToSend = robotMessage;
@@ -73,7 +73,7 @@ export function ChatbotCard() {
                 type: 'user',
                 content: text,
                 userId: mturkId,
-                timestamp: currentTime, // Add timestamp
+                timestamp: currentTime,
             };
             updatedMessages = [...updatedMessages, userMessage];
             messageToSend = userMessage;
@@ -88,7 +88,7 @@ export function ChatbotCard() {
                 type: 'host',
                 content: response?.res ?? '',
                 userId: response.name,
-                timestamp: Date.now(), // Add timestamp
+                timestamp: Date.now(),
             };
             updatedMessages = [...updatedMessages, hostMessage];
             await setMessagesInDB([messageToSend, hostMessage]);
@@ -100,10 +100,9 @@ export function ChatbotCard() {
         } catch (error) {
             console.error('Error fetching data from OpenAI:', error);
             const errorMessage: Message = {
-                type: 'host',
+                type: 'robot',
                 content: 'An error occurred while fetching the response. Please try again.',
-                userId: mturkId,
-                timestamp: Date.now(), // Add timestamp
+                timestamp: Date.now(),
             };
             setMessages([...messages, errorMessage]);
             setLoading(false);
@@ -138,7 +137,7 @@ export function ChatbotCard() {
             const nextSectionMessage: Message = {
                 type: 'robot',
                 content: "Oh, it's nice discussing globalization with you today. Good Bye!",
-                timestamp: Date.now(), // Add timestamp
+                timestamp: Date.now(),
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
         }
