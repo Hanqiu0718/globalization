@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import React, { useEffect, useRef, useState } from 'react';
 import vector from '../../public/vector.svg';
 import Image from 'next/image';
@@ -127,12 +127,11 @@ export function ChatbotCard() {
         };
     }, [inputText]);
 
-
     useEffect(() => {
-        if (resetCount === 2) {
+        if (resetCount === 3) {
             setOpenDiscussion(true);
         }
-        if (resetCount === 2 && typingTime >= 300) {
+        if (resetCount === 3 && typingTime >= 300) {
             setInputDisabled(true);
             const nextSectionMessage: Message = {
                 type: 'robot',
