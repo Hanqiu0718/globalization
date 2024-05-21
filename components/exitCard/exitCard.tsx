@@ -12,6 +12,8 @@ export function ExitCard() {
     useEffect(() => {
         if (!mturkId || !response) {
             router.push('/');
+        } else {
+            window.location.href = "https://ucla.qualtrics.com/jfe/form/SV_5gXTAC1W1Lo8c2q";
         }
     }, [mturkId, response, router]);
 

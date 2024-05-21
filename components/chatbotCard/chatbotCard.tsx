@@ -24,8 +24,6 @@ export function ChatbotCard() {
     const [typingTime, setTypingTime] = useState<number>(0);
     const [openDiscussion, setOpenDiscussion] = useState(false);
     const [resetCount, setResetCount] = useState<number>(0);
-    const [showReminder, setShowReminder] = useState<boolean>(false);
-    const [countdown, setCountdown] = useState<number>(30);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -130,19 +128,6 @@ export function ChatbotCard() {
         };
     }, [inputText]);
 
-    const startCountdown = () => {
-        let timeLeft = 30;
-        setShowReminder(true);
-        setCountdown(timeLeft);
-        const countdownInterval = setInterval(() => {
-            timeLeft -= 1;
-            setCountdown(timeLeft);
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                setShowReminder(false);
-            }
-        }, 1000);
-    };
 
     useEffect(() => {
         if (resetCount === 2) {
@@ -173,14 +158,10 @@ export function ChatbotCard() {
         }
 
         if (resetCount === 2 && typingTime >= 180) {
-            const content = `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window.`;
+            const content = `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window. Now, simply type and send "Yes" to continue, or click "Next" to exit.`;
             handleChatSubmit(content);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
-        }
-
-        if ((resetCount === 0 || resetCount === 1 || resetCount === 2) && typingTime >= 150 && !showReminder) {
-            startCountdown();
         }
     }, [resetCount, typingTime]);
 
@@ -318,12 +299,6 @@ export function ChatbotCard() {
                         {loading && <PulseLoader size={5} />}
                     </div>
                 </Card>
-
-                {showReminder && (
-                    <div className="text-center mb-3 mt-3 w-full">
-                        <p className="text-black text-sm">You still have {countdown} seconds left for this section of globalization discussion.</p>
-                    </div>
-                )}
 
                 <hr className="w-full mt-10" />
                 <form
