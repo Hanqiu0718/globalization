@@ -38,7 +38,7 @@ export async function host1(inputText: any, updatedMessages: any) {
         START CONTEXT BLOCK
         ${updatedMessages}
         END OF CONTEXT BLOCK
-        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered.`;
+        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered. If user asks an irrelevant question, acknowledge it briefly and steer the conversation back to the last relevant point without starting over.`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-4',
@@ -92,7 +92,7 @@ export async function host2(inputText: any, updatedMessages: any) {
         START CONTEXT BLOCK
         ${updatedMessages}
         END OF CONTEXT BLOCK
-        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered.`;
+        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered. If user asks an irrelevant question, acknowledge it briefly and steer the conversation back to the last relevant point without starting over.`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-4',
@@ -138,7 +138,7 @@ export async function host3(inputText: any, updatedMessages: any) {
         START CONTEXT BLOCK
         ${updatedMessages}
         END OF CONTEXT BLOCK
-        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered.`;
+        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered. If user asks an irrelevant question, acknowledge it briefly and steer the conversation back to the last relevant point without starting over.`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-4',
@@ -193,7 +193,7 @@ export async function host4(inputText: any, updatedMessages: any) {
         START CONTEXT BLOCK
         ${updatedMessages}
         END OF CONTEXT BLOCK
-        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered.`;
+        CONTEXT BLOCK is the history of conversation you being host with user, you need to analyze it and don't repeat the question if it is already answered. If user asks an irrelevant question, acknowledge it briefly and steer the conversation back to the last relevant point without starting over.`;
 
         const gptResponse = await openai.chat.completions.create({
             model: 'gpt-4',
