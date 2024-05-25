@@ -17,7 +17,7 @@ export function ChatbotCard() {
     const router = useRouter();
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hey! Great that you're pairing each other to discuss globalization! I'm served as a timer robot to remind you when time is up and for you to move on. You will be discussing three perspectives of globalization - economics, social, and political. You'll spend about 5 minutes discussing each, and then there'll be an opportunity for open discussion. Please only discuss the specific topic for each session, and leave the left-over discussion in the open discussion if you want. Now, please go ahead and start to discuss economics globalization!`, timestamp: Date.now() }]);
+    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hello, I am a timer robot. I will remind you when time is up for each topic and you need to move on to the next topic. In this conversation, you will be discussing <strong>three aspects of globalization - economic, social, and political</strong>. You'll spend about 3 minutes discussing each, and then there'll be an opportunity for open discussion at the end. <strong>Please only discuss the specific topic for each part of the conversation</strong>. If you have any further thoughts or questions about a topic after time is up, you can bring them up in the open discussion section. You may now begin the conversation with one another - please start by discussing economic globalization.`, timestamp: Date.now() }]);
     const { response, mturkId, index } = useUser();
     const [inputDisabled, setInputDisabled] = useState(false);
     const [typingStartTime, setTypingStartTime] = useState<number | null>(null);
@@ -131,32 +131,32 @@ export function ChatbotCard() {
         if (resetCount === 3) {
             setOpenDiscussion(true);
         }
-        if (resetCount === 3 && typingTime >= 300) {
+        if (resetCount === 3 && typingTime >= 120) {
             setInputDisabled(true);
             const nextSectionMessage: Message = {
                 type: 'robot',
-                content: "Oh, it's nice discussing globalization with you today. Good Bye!",
+                content: "The total time is now up, and the conversation is over. Please click 'Next' at the bottom right of the page, to move on to the final part of the study.",
                 timestamp: Date.now(),
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
         }
 
-        if (resetCount === 0 && typingTime >= 180) {
-            const content = "Time is up! Please move on to discuss social globalization.";
+        if (resetCount === 0 && typingTime >= 60) {
+            const content = "Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.";
             handleChatSubmit(content);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
-        if (resetCount === 1 && typingTime >= 180) {
-            const content = "Time is up! Please move on to discuss political globalization.";
+        if (resetCount === 1 && typingTime >= 60) {
+            const content = "Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.";
             handleChatSubmit(content);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
-        if (resetCount === 2 && typingTime >= 180) {
-            const content = `Time is up! Great that you've discussed all three topics of globalization! Now it's time for the open discussion. If you have anything leftover from previous chats or would like to talk more about general globalization, feel free to continue. If you no longer want to chat more, anytime, click "Next" at the bottom right of your page and exit your chat window. Now, simply type and send "Yes" to continue, or click "Next" to exit.`;
+        if (resetCount === 2 && typingTime >= 60) {
+            const content = `Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`;
             handleChatSubmit(content);
             setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
@@ -188,7 +188,7 @@ export function ChatbotCard() {
                     className="w-full md:w-[620px] h-[442px] mx-auto mb-5 mt-5"
                 >
                     <div className="flex flex-col space-y-5">
-                        {[...messages.slice(0, 1), ...messages.slice(2)].map((message, index) => (
+                        {messages.map((message, index) => (
                             <div
                                 key={index}
                                 className={message.type === 'user' ? 'text-right' : 'text-left'}
@@ -240,8 +240,7 @@ export function ChatbotCard() {
                                             }}
                                             className="w-full md:w-[351px]"
                                         >
-                                            <p style={{ fontSize: '14px', color: '#ffffff' }}>
-                                                {message.content}
+                                            <p style={{ fontSize: '14px', color: '#ffffff' }} dangerouslySetInnerHTML={{ __html: message.content }}>
                                             </p>
                                         </div>
                                         <p
@@ -274,8 +273,7 @@ export function ChatbotCard() {
                                             }}
                                             className="w-full md:w-[351px]"
                                         >
-                                            <p style={{ fontSize: '14px', color: '#ffffff' }}>
-                                                {message.content}
+                                            <p style={{ fontSize: '14px', color: '#ffffff' }} dangerouslySetInnerHTML={{ __html: message.content }}>
                                             </p>
                                         </div>
                                         <p
