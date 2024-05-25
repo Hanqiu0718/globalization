@@ -124,9 +124,12 @@ export function DetailsCard() {
                 </FormItem>
               )}
             />
-            <CardDescription className="font-semibold text-lg border-b md:border-b-0 mt-5 pb-3 md:pb-0">
+            <p className="text-sm mt-2">
+              In this study you will be answering a number of questions, as well as having a conversation via an online chat program about globalization. Most of the study's time will be taken up with this conversation, so please be prepared to engage thoughtfully during this online chat.
+            </p>
+            <p className="text-sm mt-2">
               Please answer the following questions before starting the discussion.
-            </CardDescription>
+            </p>
 
             {/* Current Emotions */}
             <FormItem>
@@ -187,17 +190,17 @@ export function DetailsCard() {
                   <tr>
                     <th className="border border-gray-300"></th>
                     <th className="font-normal border border-gray-300">Strongly disagree</th>
-                    <th className="font-normal border border-gray-300">Moderately disagree</th>
-                    <th className="font-normal border border-gray-300">Neither agree nor disagree</th>
-                    <th className="font-normal border border-gray-300">Moderately agree</th>
+                    <th className="font-normal border border-gray-300">Disagree</th>
+                    <th className="font-normal border border-gray-300">Neutral</th>
+                    <th className="font-normal border border-gray-300">Agree</th>
                     <th className="font-normal border border-gray-300">Strongly agree</th>
                   </tr>
                 </thead>
                 <tbody>
                   {globalizationFields.map((field, index) => (
-                    <tr key={field.key} className={`${index < 11 ? 'border-b border-gray-300' : ''} mb-8`} style={{ height: '30px' }}>
-                      <td className="border border-gray-300 text-left">{field.label}</td>
-                      {['strongly disagree', 'moderately disagree', 'neither agree nor disagree', 'moderately agree', 'strongly agree'].map((value) => (
+                    <tr key={field.key} className={`${index < 11 ? 'border-b border-gray-300' : ''}`} style={{ height: '30px' }}>
+                      <td className="border border-gray-300 text-center">{field.label}</td>
+                      {['strongly disagree', 'disagree', 'neutral', 'agree', 'strongly agree'].map((value) => (
                         <td key={value} className="text-center border border-gray-300">
                           <FormField
                             control={form.control}
@@ -226,7 +229,9 @@ export function DetailsCard() {
               </table>
             </FormItem>
 
-            <Button className="mt-5" variant="outline" type="submit">Next</Button>
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>
