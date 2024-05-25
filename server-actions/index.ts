@@ -65,7 +65,7 @@ export async function host1(inputText: any, updatedMessages: Message[]) {
                 { role: 'system', content: prompt },
                 { role: 'user', content: inputText },
             ],
-            max_tokens: 150,
+            max_tokens: 50,
         });
         return { res: gptResponse.choices[0].message.content, name: 'host1' };
     } catch (error) {
@@ -121,7 +121,7 @@ export async function host2(inputText: any, updatedMessages: Message[]) {
                 { role: 'system', content: prompt },
                 { role: 'user', content: inputText },
             ],
-            max_tokens: 150,
+            max_tokens: 50,
         });
         return { res: gptResponse.choices[0].message.content, name: 'host2' };
     } catch (error) {
@@ -169,7 +169,7 @@ export async function host3(inputText: any, updatedMessages: Message[]) {
                 { role: 'system', content: prompt },
                 { role: 'user', content: inputText },
             ],
-            max_tokens: 150,
+            max_tokens: 50,
         });
         return { res: gptResponse.choices[0].message.content, name: 'host3' };
     } catch (error) {
@@ -225,7 +225,7 @@ export async function host4(inputText: any, updatedMessages: Message[]) {
                 { role: 'system', content: prompt },
                 { role: 'user', content: inputText },
             ],
-            max_tokens: 150,
+            max_tokens: 50,
         });
         return { res: gptResponse.choices[0].message.content, name: 'host4' };
     } catch (error) {
