@@ -24,7 +24,24 @@ function getCurrentTopic(messages: Message[]): string {
     }
     return "economic globalization"; // Default to economic globalization if no topic found
 }
+async function getHostResponse(prompt: string, inputText: string): Promise<string> {
+    const gptResponse = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content: inputText },
+        ],
+        max_tokens: 150,
+    });
 
+    let response = gptResponse.choices[0]?.message.content ?? '';
+    let sentences = response.split('.').filter(sentence => sentence.trim().length > 0);
+    if (sentences.length > 3) {
+        response = sentences.slice(0, 3).join('. ') + '.';
+    }
+
+    return response;
+}
 export async function host1(inputText: any, updatedMessages: Message[]) {
     try {
         const currentTopic = getCurrentTopic(updatedMessages);
@@ -59,17 +76,11 @@ export async function host1(inputText: any, updatedMessages: Message[]) {
         END OF CONTEXT BLOCK
         CONTEXT BLOCK is the history of the conversation you are having as the host with the user. You need to analyze it and avoid repeating questions if they are already answered. If the user asks an irrelevant question or inputs random words, acknowledge it briefly and steer the conversation back to the last timer robot's instruction. The current topic based on the timer robot's last instruction is: ${currentTopic === "open discussion" ? "open discussion about any aspect of globalization" : currentTopic}.`;
 
-        const gptResponse = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [
-                { role: 'system', content: prompt },
-                { role: 'user', content: inputText },
-            ],
-            max_tokens: 50,
-        });
-        return { res: gptResponse.choices[0].message.content, name: 'host1' };
+        const response = await getHostResponse(prompt, inputText);
+        return { res: response, name: 'host1', type: 'AI' };
     } catch (error) {
         console.log(error);
+        return { res: 'An error occurred.', name: 'host1', type: 'AI' };
     }
 }
 
@@ -115,17 +126,11 @@ export async function host2(inputText: any, updatedMessages: Message[]) {
         END OF CONTEXT BLOCK
         CONTEXT BLOCK is the history of the conversation you are having as the host with the user. You need to analyze it and avoid repeating questions if they are already answered. If the user asks an irrelevant question or inputs random words, acknowledge it briefly and steer the conversation back to the last timer robot's instruction. The current topic based on the timer robot's last instruction is: ${currentTopic === "open discussion" ? "open discussion about any aspect of globalization" : currentTopic}.`;
 
-        const gptResponse = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [
-                { role: 'system', content: prompt },
-                { role: 'user', content: inputText },
-            ],
-            max_tokens: 50,
-        });
-        return { res: gptResponse.choices[0].message.content, name: 'host2' };
+        const response = await getHostResponse(prompt, inputText);
+        return { res: response, name: 'host1', type: 'AI' };
     } catch (error) {
         console.log(error);
+        return { res: 'An error occurred.', name: 'host1', type: 'AI' };
     }
 }
 
@@ -163,17 +168,11 @@ export async function host3(inputText: any, updatedMessages: Message[]) {
         END OF CONTEXT BLOCK
         CONTEXT BLOCK is the history of the conversation you are having as the host with the user. You need to analyze it and avoid repeating questions if they are already answered. If the user asks an irrelevant question or inputs random words, acknowledge it briefly and steer the conversation back to the last timer robot's instruction. The current topic based on the timer robot's last instruction is: ${currentTopic === "open discussion" ? "open discussion about any aspect of globalization" : currentTopic}.`;
 
-        const gptResponse = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [
-                { role: 'system', content: prompt },
-                { role: 'user', content: inputText },
-            ],
-            max_tokens: 50,
-        });
-        return { res: gptResponse.choices[0].message.content, name: 'host3' };
+        const response = await getHostResponse(prompt, inputText);
+        return { res: response, name: 'host1', type: 'AI' };
     } catch (error) {
         console.log(error);
+        return { res: 'An error occurred.', name: 'host1', type: 'AI' };
     }
 }
 
@@ -219,17 +218,11 @@ export async function host4(inputText: any, updatedMessages: Message[]) {
         END OF CONTEXT BLOCK
         CONTEXT BLOCK is the history of the conversation you are having as the host with the user. You need to analyze it and avoid repeating questions if they are already answered. If the user asks an irrelevant question or inputs random words, acknowledge it briefly and steer the conversation back to the last timer robot's instruction. The current topic based on the timer robot's last instruction is: ${currentTopic === "open discussion" ? "open discussion about any aspect of globalization" : currentTopic}.`;
 
-        const gptResponse = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [
-                { role: 'system', content: prompt },
-                { role: 'user', content: inputText },
-            ],
-            max_tokens: 50,
-        });
-        return { res: gptResponse.choices[0].message.content, name: 'host4' };
+        const response = await getHostResponse(prompt, inputText);
+        return { res: response, name: 'host1', type: 'AI' };
     } catch (error) {
         console.log(error);
+        return { res: 'An error occurred.', name: 'host1', type: 'AI' };
     }
 }
 
