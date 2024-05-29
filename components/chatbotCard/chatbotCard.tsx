@@ -91,7 +91,7 @@ export function ChatbotCard() {
                 timestamp: Date.now(),
             };
             updatedMessages = [...updatedMessages, hostMessage];
-            await setMessagesInDB([messageToSend, hostMessage]);
+            await setMessagesInDB(mturkId, [messageToSend, hostMessage]);
             setTimeout(async () => {
                 setMessages(updatedMessages);
                 setLoading(false);
