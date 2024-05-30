@@ -10,6 +10,8 @@ import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/context';
 import { useEffect } from 'react';
+import { setDetailsInDB } from '@/server-actions';
+
 
 export function DetailsCard() {
   const router = useRouter();
@@ -77,11 +79,15 @@ export function DetailsCard() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     setMturkId(data.id);
     setIndex(randomIndex);
-    router.push('/info');
-  }
+    try {
+      await setDetailsInDB(data);
+      router.push('/info');
+    } catch (error) {
+      console.error("Error saving details:", error);
+    }  }
 
   const emotionFields = [
     'upset', 'hostile', 'alert', 'ashamed', 'inspired', 'nervous',

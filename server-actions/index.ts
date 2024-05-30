@@ -240,3 +240,43 @@ export async function setMessagesInDB(mturkId: string, messages: Message[]) {
         console.log(error);
     }
 }
+
+export async function setDetailsInDB(data: any) {
+    try {
+        (await mongoClient)
+            .db(process.env.MONGO_DB)
+            .collection('globalizationChat')
+            .updateOne(
+                { mturkId: data.id },
+                {
+                    $set: {
+                        upset: data.upset,
+                        hostile: data.hostile,
+                        alert: data.alert,
+                        ashamed: data.ashamed,
+                        inspired: data.inspired,
+                        nervous: data.nervous,
+                        determined: data.determined,
+                        attentive: data.attentive,
+                        afraid: data.afraid,
+                        active: data.active,
+                        general1: data.general1,
+                        economy1: data.economy1,
+                        political1: data.political1,
+                        social1: data.social1,
+                        general2: data.general2,
+                        economy2: data.economy2,
+                        political2: data.political2,
+                        social2: data.social2,
+                        general3: data.general3,
+                        economy3: data.economy3,
+                        political3: data.political3,
+                        social3: data.social3,
+                    }
+                },
+                { upsert: true }
+            );
+    } catch (error) {
+        console.log(error);
+    }
+}
