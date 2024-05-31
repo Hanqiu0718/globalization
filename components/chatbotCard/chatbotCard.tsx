@@ -27,6 +27,8 @@ export function ChatbotCard() {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [overallTime, setOverallTime] = useState(0);
+    const overallTimerRef = useRef<number | null>(null);
 
     const hosts = [host1, host2, host3, host4];
     const host = hosts[index];
@@ -36,6 +38,17 @@ export function ChatbotCard() {
             messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
         }
     }, [messages]);
+
+    useEffect(() => {
+        overallTimerRef.current = window.setInterval(() => {
+            setOverallTime(prevTime => prevTime + 1);
+        }, 1000);
+        return () => {
+            if (overallTimerRef.current) {
+                clearInterval(overallTimerRef.current);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         if (!response || !mturkId) {
@@ -57,12 +70,14 @@ export function ChatbotCard() {
         const text = alert ? alert : inputText;
         let updatedMessages = [...messages];
         let messageToSend!: Message;
+        let isFirstMessage = messages.filter(msg => msg.type === 'user').length === 0;
 
-        const wordCount = inputText.trim().split(/\s+/).length;
-
-        if (wordCount < 6) {
-            setErrorMessage('Please type more words to submit.');
-            return;
+        if (!isFirstMessage) {
+            const wordCount = text.trim().split(/\s+/).length;
+            if (wordCount < 6) {
+                setErrorMessage('Please type more words to submit.');
+                return;
+            }
         }
 
         const currentTime = Date.now();
@@ -135,6 +150,37 @@ export function ChatbotCard() {
             }
         };
     }, [inputText]);
+
+    useEffect(() => {
+        if (overallTime==1800) {
+            setOpenDiscussion(true);
+        }
+        if (overallTime==2400) {
+            setInputDisabled(true);
+            const nextSectionMessage: Message = {
+                type: 'robot',
+                content: "The total time is now up, and the conversation is over. Please click 'Next' at the bottom right of the page, to move on to the final part of the study.",
+                timestamp: Date.now(),
+            };
+            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            setMessagesInDB(mturkId, [...messages, nextSectionMessage]);
+        }
+
+        if (overallTime==600) {
+            const content = "Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.";
+            handleChatSubmit(content);
+        }
+
+        if (overallTime==1200) {
+            const content = "Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.";
+            handleChatSubmit(content);
+        }
+
+        if (overallTime==1800) {
+            const content = `Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`;
+            handleChatSubmit(content);
+        }
+    }, [overallTime]);
 
     useEffect(() => {
         if (resetCount === 3) {
