@@ -56,7 +56,7 @@ export async function host1(inputText: any, updatedMessages: Message[]) {
         Start each discussion with these questions:
         Economic: "Hey, we are here to discuss economic globalization first. What do you think about the globally expanding companies such as McDonald's?"
         Social: "Let's jump into discussing social globalization! What's your attitude toward shared social media across the world?"
-        Political: "Let's jump into discussing political globalization! Have you heard about any international organizations such as United Nations?"
+        Political: "Let's jump into discussing political globalization! What do you think about international organizations such as United Nations?"
         Open-ended: "Great that we have discussed all three topics about globalization! Should we continue discussing what has been left over from our previous conversations? What would you like to talk more about?"
         End the conversation by saying something like “Thank you for discussing globalization with me today.”
         Avoid discussing the downsides of globalization. Focus on its benefits.
@@ -98,7 +98,7 @@ export async function host2(inputText: any, updatedMessages: Message[]) {
         Start each discussion with these questions:
         Economic: "Hey, we are here to discuss economic globalization first. What do you think about the globally expanding companies such as McDonald's?"
         Social: "Let's jump into discussing social globalization! What's your attitude toward shared social media across the world?"
-        Political: "Let's jump into discussing political globalization! Have you heard about any international organizations such as United Nations?"
+        Political: "Let's jump into discussing political globalization! What do you think about international organizations such as United Nations?"
         Open-ended: "Great that we have discussed all three topics about globalization! Should we continue discussing what has been left over from our previous conversations? What would you like to talk more about?"
         End the conversation by saying something like “Thank you for discussing globalization with me today.”
         Avoid discussing the downsides of globalization. Focus on its benefits.
@@ -148,7 +148,7 @@ export async function host3(inputText: any, updatedMessages: Message[]) {
         Start each discussion with these questions:
         Economic: "Hey, we are here to discuss economic globalization first. What do you think about the globally expanding companies such as McDonald's?"
         Social: "Let's jump into discussing social globalization! What's your attitude toward shared social media across the world?"
-        Political: "Let's jump into discussing political globalization! Have you heard about any international organizations such as United Nations?"
+        Political: "Let's jump into discussing political globalization! What do you think about international organizations such as United Nations?"
         Open-ended: "Great that we have discussed all three topics about globalization! Should we continue discussing what has been left over from our previous conversations? What would you like to talk more about?"
         End the conversation by saying something like “Thank you for discussing globalization with me today.”
         Avoid discussing the downsides of globalization. Focus on its benefits.
@@ -190,7 +190,7 @@ export async function host4(inputText: any, updatedMessages: Message[]) {
         Start each discussion with these questions:
         Economic: "Hey, we are here to discuss economic globalization first. What do you think about the globally expanding companies such as McDonald's?"
         Social: "Let's jump into discussing social globalization! What's your attitude toward shared social media across the world?"
-        Political: "Let's jump into discussing political globalization! Have you heard about any international organizations such as United Nations?"
+        Political: "Let's jump into discussing political globalization! What do you think about international organizations such as United Nations?"
         Open-ended: "Great that we have discussed all three topics about globalization! Should we continue discussing what has been left over from our previous conversations? What would you like to talk more about?"
         End the conversation by saying something like “Thank you for discussing globalization with me today.”
         Avoid discussing the downsides of globalization. Focus on its benefits.
