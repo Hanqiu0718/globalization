@@ -16,7 +16,7 @@ import { setDetailsInDB } from '@/server-actions';
 export function DetailsCard() {
   const router = useRouter();
   const { response, setMturkId, setIndex } = useUser();
-  const randomIndex = Math.floor(Math.random() * 4);
+  const randomIndex = Math.floor(Math.random() * 3);
 
   useEffect(() => {
     if (!response) {

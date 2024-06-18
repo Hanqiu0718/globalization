@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Message } from '@/global';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/context';
-import { host1, host2, host3, host4, setMessagesInDB } from '@/server-actions';
+import { host1, host2, host3, setMessagesInDB } from '@/server-actions';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 export function ChatbotCard() {
@@ -30,7 +30,7 @@ export function ChatbotCard() {
     const [overallTime, setOverallTime] = useState(0);
     const overallTimerRef = useRef<number | null>(null);
 
-    const hosts = [host1, host2, host3, host4];
+    const hosts = [host1, host2, host3];
     const host = hosts[index];
 
     useEffect(() => {
