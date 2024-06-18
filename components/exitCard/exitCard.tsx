@@ -22,6 +22,10 @@ export function ExitCard() {
             <div className="flex items-center justify-between">
                 <CardTitle className="text-base mt-5 mb-5 text-[#212B36] md:mx-5">
                 </CardTitle>
+                This page should automatically proceed to another webpage.<br /><br />
+                
+                If it does not proceed, copy and paste the following link to a new tab and continue.<br /><br />
+                https://ucla.qualtrics.com/jfe/form/SV_5gXTAC1W1Lo8c2q
             </div>
         </Card>
     )
