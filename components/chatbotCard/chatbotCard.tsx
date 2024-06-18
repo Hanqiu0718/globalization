@@ -17,7 +17,7 @@ export function ChatbotCard() {
     const router = useRouter();
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hello, I am a timer robot. I will remind you when time is up for each topic and you need to move on to the next topic. In this conversation, you will be discussing <strong>three aspects of globalization - economic, social, and political</strong>. You'll spend about 3 minutes discussing each, and then there'll be an opportunity for open discussion at the end. <strong>Please only discuss the specific topic for each part of the conversation</strong>. If you have any further thoughts or questions about a topic after time is up, you can bring them up in the open discussion section. You may now begin the conversation with one another - please start by discussing economic globalization.`, timestamp: Date.now() }]);
+    const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hello, I am a timer robot. I will remind you when time is up for each topic and you need to move on to the next topic. In this conversation, you will be discussing <strong>three aspects of globalization - economic, social, and political</strong>. You'll spend about 3 minutes discussing each, and then there'll be an opportunity for open discussion at the end. <strong>Please only discuss the specific topic for each part of the conversation</strong>. If you have any further thoughts or questions about a topic after time is up, you can bring them up in the open discussion section. You may now begin the conversation with one another - please start by discussing economic globalization. We randomly assigned your discussion partner to start the conversation.`, timestamp: Date.now() }]);
     const { response, mturkId, index } = useUser();
     const [inputDisabled, setInputDisabled] = useState(false);
     const [typingStartTime, setTypingStartTime] = useState<number | null>(null);
@@ -74,8 +74,8 @@ export function ChatbotCard() {
 
         if (!isFirstMessage) {
             const wordCount = text.trim().split(/\s+/).length;
-            if (wordCount < 6) {
-                setErrorMessage('Please type more words to submit.');
+            if (wordCount < 11) {
+                setErrorMessage('Please note that you can only send one message at a time, so make sure you type what you have in your mind fully before sending the message out. You need to type more words to proceed.');
                 return;
             }
         }
@@ -151,36 +151,6 @@ export function ChatbotCard() {
         };
     }, [inputText]);
 
-    useEffect(() => {
-        if (overallTime==1800) {
-            setOpenDiscussion(true);
-        }
-        if (overallTime==2400) {
-            setInputDisabled(true);
-            const nextSectionMessage: Message = {
-                type: 'robot',
-                content: "The total time is now up, and the conversation is over. Please click 'Next' at the bottom right of the page, to move on to the final part of the study.",
-                timestamp: Date.now(),
-            };
-            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
-            setMessagesInDB(mturkId, [...messages, nextSectionMessage]);
-        }
-
-        if (overallTime==600) {
-            const content = "Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.";
-            handleChatSubmit(content);
-        }
-
-        if (overallTime==1200) {
-            const content = "Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.";
-            handleChatSubmit(content);
-        }
-
-        if (overallTime==1800) {
-            const content = `Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`;
-            handleChatSubmit(content);
-        }
-    }, [overallTime]);
 
     useEffect(() => {
         if (resetCount === 3) {
@@ -401,8 +371,8 @@ export function ChatbotCard() {
                 )}
             </Card>
             {openDiscussion && (
-                <div className="flex justify-end mt-5 mx-5 mb-5">
-                    <Button className="ml-auto" variant="outline" onClick={nextButtonHandler}>
+                <div className="flex justify-end -mt-20 mx-5 mb-5">
+                    <Button className="mr-44" variant="outline" onClick={nextButtonHandler}>
                         Next
                     </Button>
                 </div>
