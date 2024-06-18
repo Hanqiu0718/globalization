@@ -73,10 +73,10 @@ export async function host1(inputText: any, updatedMessages: Message[]) {
         CONTEXT BLOCK is the history of the conversation you are having as the host with the user. You need to analyze it and avoid repeating questions if they are already answered. If the user asks an irrelevant question or inputs random words, acknowledge it briefly and steer the conversation back to the last timer robot's instruction. The current topic based on the timer robot's last instruction is: ${currentTopic === "open discussion" ? "open discussion about any aspect of globalization" : currentTopic}.`;
 
         const response = await getHostResponse(prompt, inputText);
-        return { res: response, name: 'host1', type: 'AI' };
+        return { res: response, name: 'host1', type: 'Human Expert' };
     } catch (error) {
         console.log(error);
-        return { res: 'An error occurred.', name: 'host1', type: 'AI' };
+        return { res: 'An error occurred.', name: 'host1', type: 'Human Expert' };
     }
 }
 
