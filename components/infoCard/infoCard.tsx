@@ -9,7 +9,7 @@ import { useUser } from "@/providers/context";
 export function InfoCard() {
     const router = useRouter();
     const { mturkId, response, index } = useUser();
-    const types = ['another person who is an expert in globalization', 'a specialized AI in globalization', 'a specialized AI in globalization']
+    const types = ['1another person who is an expert in globalization', '2a specialized AI in globalization', '3a specialized AI in globalization']
     const type = types[index];
     const [partner, setPartner] = useState('');
 
