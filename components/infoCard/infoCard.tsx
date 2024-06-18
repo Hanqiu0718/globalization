@@ -38,7 +38,7 @@ export function InfoCard() {
                     Send your message: Please note that <strong>you can only send one message at a time</strong>, so each time when it is your turn to send a message, please type all you want to say in one message for better experience.<br /><br />
                     Wait for a Reply: After sending your message, please wait for your partner to respond before you send another.<br /><br />
                     Three topics of globalization: You and the discussion partner will discuss three topics of globalization in order: <strong>economics globalization, social globalization, and political globalization</strong>.<br /><br />
-                    Complete <strong>1 minute of typing time for each topic</strong>: For each topic of globalization discussion, you will need to type for 1 minute each in order to proceed to the next topic.<br /><br />
+                    Complete <strong>1 minute in total of typing time for each topic</strong>: For each topic of globalization discussion, you will need to type for 1 minute in total, no matter the number of exchanged messages, in order to proceed to the next topic.<br /><br />
                     Proceed to Open Discussion: Once you have completed discussing the three topics, you can move to the open discussion phase.<br /><br /><br />
                    
                     <strong>Instructions for Open Discussion:</strong><br /><br />
