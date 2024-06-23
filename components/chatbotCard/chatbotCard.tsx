@@ -133,17 +133,17 @@ export function ChatbotCard() {
             handleChatSubmit(content);
         };
     
-        if (resetCount === 0 && hostMessages.length === 5 && userMessages.length === 5) {
+        if (resetCount === 0 && hostMessages.length === 4 && userMessages.length === 4) {
             sendRobotMessage(`Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.`);
             setResetCount(prevCounter => prevCounter + 1);
         }
     
-        if (resetCount === 1 && hostMessages.length === 10 && userMessages.length === 9) {
+        if (resetCount === 1 && hostMessages.length === 8 && userMessages.length === 7) {
             sendRobotMessage(`Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.`);
             setResetCount(prevCounter => prevCounter + 1);
         }
     
-        if (resetCount === 2 && hostMessages.length === 15 && userMessages.length === 13) {
+        if (resetCount === 2 && hostMessages.length === 12 && userMessages.length === 10) {
             sendRobotMessage(`Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`);
             setResetCount(prevCounter => prevCounter + 1);
             setOpenDiscussion(true);
