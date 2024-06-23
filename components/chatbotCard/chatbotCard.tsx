@@ -122,32 +122,36 @@ export function ChatbotCard() {
         const hostMessages = messages.filter(message => message.type === 'host');
         const userMessages = messages.filter(message => message.type === 'user');
 
-        if (resetCount === 3 && hostMessages.length === 100 && userMessages.length === 100) {
-            setInputDisabled(true);
+        if (resetCount === 0 && hostMessages.length === 4 && userMessages.length === 4) {
             const nextSectionMessage: Message = {
                 type: 'robot',
-                content: "The total time is now up, and the conversation is over. Please click 'Next' at the bottom right of the page, to move on to the final part of the study.",
+                content: `Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.`,
                 timestamp: Date.now(),
             };
             setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
             setMessagesInDB(mturkId, [...messages, nextSectionMessage]);
-        }
-
-        if (resetCount === 0 && hostMessages.length === 4 && userMessages.length === 4) {
-            const content = "Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.";
-            handleChatSubmit(content);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
         if (resetCount === 1 && hostMessages.length === 8 && userMessages.length === 8) {
-            const content = "Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.";
-            handleChatSubmit(content);
+            const nextSectionMessage: Message = {
+                type: 'robot',
+                content: `Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.`,
+                timestamp: Date.now(),
+            };
+            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            setMessagesInDB(mturkId, [...messages, nextSectionMessage]);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
         if (resetCount === 2 && hostMessages.length === 12 && userMessages.length === 12) {
-            const content = `Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`;
-            handleChatSubmit(content);
+            const nextSectionMessage: Message = {
+                type: 'robot',
+                content: `Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`,
+                timestamp: Date.now(),
+            };
+            setMessages(prevMessages => [...prevMessages, nextSectionMessage]);
+            setMessagesInDB(mturkId, [...messages, nextSectionMessage]);
             setResetCount(prevCounter => prevCounter + 1);
             setOpenDiscussion(true);
         }
