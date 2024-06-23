@@ -9,7 +9,7 @@ import { useUser } from "@/providers/context";
 export function InfoCard() {
     const router = useRouter();
     const { mturkId, response, index } = useUser();
-    const types = ['1another person who is an expert in globalization', '2a specialized AI in globalization', '3a specialized AI in globalization']
+    const types = ['another person who is an expert in globalization', 'a specialized AI in globalization', 'a specialized AI in globalization']
     const type = types[index];
     const [partner, setPartner] = useState('');
 
@@ -31,21 +31,17 @@ export function InfoCard() {
         <Card className="w-full border-0 md:border md:border-[2px] flex-col items-center justify-center mb-10">
             <div className="mt-3 mx-5">
                 <CardTitle className="block text-sm font-medium text-[#212B36]">
-                    You will be chatting with <strong>{type}</strong> to discuss your incident. Please read the following instructions carefully.<br /><br /><br />
+                    You will be chatting with <strong>{type}</strong> to discuss your incident.<br /><br /> 
+                    Please read the following instructions thoroughly, as they are very important for the conversation you are about to have.<br /><br /><br />
                     <strong>Instructions for Structured Discussion:</strong><br /><br />
 
-                    Start Message: We randomly assigned your discussion partner to start the conversation.<br /><br />
-                    Send your message: Please note that <strong>you can only send one message at a time</strong>, so each time when it is your turn to send a message, please type all you want to say in one message for better experience.<br /><br />
-                    Wait for a Reply: After sending your message, please wait for your partner to respond before you send another.<br /><br />
-                    Three topics of globalization: You and the discussion partner will discuss three topics of globalization in order: <strong>economics globalization, social globalization, and political globalization</strong>.<br /><br />
-                    Complete <strong>1 minute in total of typing time for each topic</strong>: For each topic of globalization discussion, you will need to type for 1 minute in total, no matter the number of exchanged messages, in order to proceed to the next topic.<br /><br />
-                    Proceed to Open Discussion: Once you have completed discussing the three topics, you can move to the open discussion phase.<br /><br /><br />
-                   
-                    <strong>Instructions for Open Discussion:</strong><br /><br />
-
-                    Two-minute typing time at most: In the open discussion, you have two minutes of typing time at most.<br /><br />
-                    End Anytime: You can end the discussion at any time if you feel the conversation has concluded.<br /><br /><br />
-                </CardTitle>
+                    We have randomly assigned your discussion partner to start the conversation.<br /><br />
+                    Please note that each of you can only send <strong>one message</strong> at a time, so whenever it is your turn to send a message, please type all you want to say in one message, without hitting return. <br /><br />
+                    After sending your message, you will not be able to send another until your discussion partner replies. <br /><br />
+                    You and the discussion partner will discuss <strong>three</strong> topics of globalization in order: economics globalization, social globalization, and political globalization.<br /><br />
+                    You will need to have several rounds of conversation with your discussion partner for each topic. The timer robot will let you know when it is time to move on to the next topic.<br /><br />
+                    Once you have discussed the three topics, the open discussion phase of the conversation will start. During the open discussion you will have additional time to talk with your discussion partner, but you can also end the discussion at any time if you feel the conversation has concluded.<br /><br /><br />
+                    </CardTitle>
             </div>
             <div className="mt-3 mx-5">
                 <label htmlFor="partnerInput" className="block text-sm font-medium text-[#212B36]">

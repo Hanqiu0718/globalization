@@ -20,15 +20,11 @@ export function ChatbotCard() {
     const [messages, setMessages] = useState<Message[]>([{ type: 'robot', content: `Hello, I am a timer robot. I will remind you when time is up for each topic and you need to move on to the next topic. In this conversation, you will be discussing <strong>three aspects of globalization - economic, social, and political</strong>. Then there'll be an opportunity for open discussion at the end. <strong>Please only discuss the specific topic for each part of the conversation</strong>. If you have any further thoughts or questions about a topic after time is up, you can bring them up in the open discussion section. You may now begin the conversation with one another - please start by discussing economic globalization. We randomly assigned your discussion partner to start the conversation.`, timestamp: Date.now() }]);
     const { response, mturkId, index } = useUser();
     const [inputDisabled, setInputDisabled] = useState(false);
-    const [typingStartTime, setTypingStartTime] = useState<number | null>(null);
-    const [typingTime, setTypingTime] = useState<number>(0);
     const [openDiscussion, setOpenDiscussion] = useState(false);
     const [resetCount, setResetCount] = useState<number>(0);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [overallTime, setOverallTime] = useState(0);
-    const overallTimerRef = useRef<number | null>(null);
 
     const hosts = [host1, host2, host3];
     const host = hosts[index];
@@ -39,16 +35,6 @@ export function ChatbotCard() {
         }
     }, [messages]);
 
-    useEffect(() => {
-        overallTimerRef.current = window.setInterval(() => {
-            setOverallTime(prevTime => prevTime + 1);
-        }, 1000);
-        return () => {
-            if (overallTimerRef.current) {
-                clearInterval(overallTimerRef.current);
-            }
-        };
-    }, []);
 
     useEffect(() => {
         if (!response || !mturkId) {
@@ -61,9 +47,6 @@ export function ChatbotCard() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(e.target.value);
         setErrorMessage('');
-        if (!typingStartTime) {
-            setTypingStartTime(Date.now());
-        }
     };
 
     const handleChatSubmit = async (alert?: any) => {
@@ -75,7 +58,7 @@ export function ChatbotCard() {
         if (!isFirstMessage) {
             const wordCount = text.trim().split(/\s+/).length;
             if (wordCount < 11) {
-                setErrorMessage('Please note that you can only send one message at a time, so make sure you type what you have in your mind fully before sending the message out. You need to type more words to proceed.');
+                setErrorMessage('Please note that you can only send one message at a time, so make sure you type out your full and complete response before hitting send. You need to type more words to proceed.');
                 return;
             }
         }
@@ -134,29 +117,15 @@ export function ChatbotCard() {
         }
     };
 
-    const handleKeyUp = () => {
-        if (typingStartTime) {
-            const timeDifference = Date.now() - typingStartTime;
-            setTypingTime((prevTypingTime) => prevTypingTime + timeDifference / 1000);
-            setTypingStartTime(null);
-        }
-    };
 
     useEffect(() => {
-        return () => {
-            if (typingStartTime) {
-                setTypingTime((prevTypingTime) => prevTypingTime + (Date.now() - typingStartTime) / 1000);
-                setTypingStartTime(null);
-            }
-        };
-    }, [inputText]);
+        const hostMessages = messages.filter(message => message.type === 'host');
+        const userMessages = messages.filter(message => message.type === 'user');
 
-
-    useEffect(() => {
         if (resetCount === 3) {
             setOpenDiscussion(true);
         }
-        if (resetCount === 3 && typingTime >= 120) {
+        if (resetCount === 3 && hostMessages.length === 16 && userMessages.length === 16) {
             setInputDisabled(true);
             const nextSectionMessage: Message = {
                 type: 'robot',
@@ -167,27 +136,24 @@ export function ChatbotCard() {
             setMessagesInDB(mturkId, [...messages, nextSectionMessage]);
         }
 
-        if (resetCount === 0 && typingTime >= 60) {
+        if (resetCount === 0 && hostMessages.length === 4 && userMessages.length === 4) {
             const content = "Time is up for this topic. It is now time to discuss <strong>social globalization</strong>.";
             handleChatSubmit(content);
-            setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
-        if (resetCount === 1 && typingTime >= 60) {
+        if (resetCount === 1 && hostMessages.length === 8 && userMessages.length === 8) {
             const content = "Time is up for this topic. It is now time to discuss <strong>political globalization</strong>.";
             handleChatSubmit(content);
-            setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
 
-        if (resetCount === 2 && typingTime >= 60) {
+        if (resetCount === 2 && hostMessages.length === 12 && userMessages.length === 12 && !openDiscussion) {
             const content = `Time is up, and it is now time for the open discussion part of the conversation. <strong>Please stay on the topic of globalization</strong>, and feel free to discuss any thoughts or questions you have left over from the previous topic discussions. If you no longer want to chat, at any time, you can click "Next" at the bottom right of your page and move on to the final part of the study.`;
             handleChatSubmit(content);
-            setTypingTime(0);
             setResetCount(prevCounter => prevCounter + 1);
         }
-    }, [resetCount, typingTime]);
+    }, [resetCount]);
 
     const nextButtonHandler = () => {
         router.push('/exit');
@@ -334,7 +300,6 @@ export function ChatbotCard() {
                         required={true}
                         value={inputText}
                         onChange={handleInputChange}
-                        onKeyUp={handleKeyUp}
                         disabled={inputDisabled}
                     />
                     <Button
