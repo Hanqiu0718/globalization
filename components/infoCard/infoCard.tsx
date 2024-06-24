@@ -9,7 +9,7 @@ import { useUser } from "@/providers/context";
 export function InfoCard() {
     const router = useRouter();
     const { mturkId, response, index } = useUser();
-    const types = ['another person who is an expert in globalization', 'a specialized AI in globalization', 'a specialized AI in globalization']
+    const types = ['another person (The person is an expert in globalization)', 'an AI (The AI is specialized in globalization)', 'an AI (The AI is specialized in globalization)']
     const type = types[index];
     const [partner, setPartner] = useState('');
 
@@ -31,7 +31,7 @@ export function InfoCard() {
         <Card className="w-full border-0 md:border md:border-[2px] flex-col items-center justify-center mb-10">
             <div className="mt-3 mx-5">
                 <CardTitle className="block text-sm font-medium text-[#212B36]">
-                    You will be chatting with <strong>{type}</strong> to discuss your incident.<br /><br /> 
+                    You will be chatting with <strong>{type}</strong>.<br /><br /> 
                     Please read the following instructions thoroughly, as they are very important for the conversation you are about to have.<br /><br /><br />
                     <strong>Instructions for Structured Discussion:</strong><br /><br />
 

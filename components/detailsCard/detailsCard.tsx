@@ -131,7 +131,7 @@ export function DetailsCard() {
               )}
             />
             <p className="text-sm mt-2">
-              In this study you will be answering a number of questions, as well as having a conversation via an online chat program about globalization. Most of the study&apos;s time will be taken up with this conversation, so please be prepared to engage thoughtfully during this online chat.
+              In this study you will be answering a number of questions, as well as having a conversation via an online chat program about globalization. Most of the study&apos;s time will be taken up with this conversation between you and your partner, so please be prepared to engage thoughtfully during this online chat.
             </p>
             <p className="text-sm mt-2">
               Please answer the following questions before starting the discussion.
